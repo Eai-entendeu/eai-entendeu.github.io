@@ -2,8 +2,19 @@
 <title>Conectando Instagram · E aí, entendeu?</title><link rel="stylesheet" href="_style.css"></head><body><main>
 <p>Voltando para o painel do canal…</p>
 <script>
-// A Meta exige redirect HTTPS; o painel roda localmente. Esta página só repassa o código de autorização para ele.
-var q = location.search;
-if (/[?&](code|error)=/.test(q)) location.replace('http://localhost:3100/connect/instagram/callback' + q);
+// A Meta exige um redirect HTTPS fixo. Esta página devolve o código de autorização ao painel que pediu:
+// o endereço do painel vem codificado no final do "state" (aleatório.base64url(endereço)).
+var q = new URLSearchParams(location.search);
+var target = 'http://localhost:3100';
+var st = q.get('state') || '';
+var i = st.lastIndexOf('.');
+if (i > 0) {
+  try {
+    var b = st.slice(i + 1).replace(/-/g, '+').replace(/_/g, '/');
+    var origin = atob(b + '==='.slice((b.length + 3) % 4));
+    if (/^https:\/\/[a-z0-9-]+\.up\.railway\.app$/.test(origin) || /^http:\/\/localhost:\d+$/.test(origin)) target = origin;
+  } catch (e) {}
+}
+if (q.get('code') || q.get('error')) location.replace(target + '/connect/instagram/callback' + location.search);
 </script>
 </main></body></html>
