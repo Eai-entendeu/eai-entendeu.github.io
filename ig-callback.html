@@ -1,0 +1,9 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Conectando Instagram · E aí, entendeu?</title><link rel="stylesheet" href="_style.css"></head><body><main>
+<p>Voltando para o painel do canal…</p>
+<script>
+// A Meta exige redirect HTTPS; o painel roda localmente. Esta página só repassa o código de autorização para ele.
+var q = location.search;
+if (/[?&](code|error)=/.test(q)) location.replace('http://localhost:3100/connect/instagram/callback' + q);
+</script>
+</main></body></html>
